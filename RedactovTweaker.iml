@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="JAVA_MODULE" version="4">
+  <component name="NewModuleRootManager">
+    <output url="file://$MODULE_DIR$/out/production/RedactovTweaker" />
+    <output-test url="file://$MODULE_DIR$/out/test/RedactovTweaker" />
+    <exclude-output />
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="formdev.flatlaf" level="project" />
+    <orderEntry type="library" name="formdev.flatlaf.extras" level="project" />
+    <orderEntry type="library" name="MigLayout" level="project" />
+    <orderEntry type="library" name="formdev.flatlaf.swingx" level="project" />
+    <orderEntry type="library" name="glassfish.javax.json" level="project" />
+    <orderEntry type="library" name="jna-platform-5.16.0" level="project" />
+    <orderEntry type="library" name="jna-jpms-5.16.0" level="project" />
+    <orderEntry type="library" name="json-20250107" level="project" />
+    <orderEntry type="library" name="apache.directory.studio.commons.io" level="project" />
+    <orderEntry type="library" name="github.tuupertunut.powershell.lib.java" level="project" />
+  </component>
+</module>

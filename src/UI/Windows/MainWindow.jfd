@@ -1,0 +1,242 @@
+JFDML JFormDesigner: "8.2.4.0.393" Java: "21.0.5" encoding: "UTF-8"
+
+new FormModel {
+	contentType: "form/swing"
+	root: new FormRoot {
+		add( new FormWindow( "javax.swing.JFrame", new FormLayoutManager( class java.awt.GridLayout ) ) {
+			name: "this"
+			"title": "Redactov Tweaker"
+			"iconImage": new com.jformdesigner.model.SwingIcon( 0, "/resources/redactovtweakericon.png" )
+			"font": new java.awt.Font( "Inter", 0, 12 )
+			add( new FormContainer( "javax.swing.JTabbedPane", new FormLayoutManager( class javax.swing.JTabbedPane ) ) {
+				name: "tabbedPane1"
+				"font": new java.awt.Font( "Inter", 0, 12 )
+				"selectedIndex": 1
+				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.GridBagLayout ) {
+					"$columnSpecs": "0:1.0"
+					"$rowSpecs": "8, 0:1.0"
+					"$alignTop": true
+					"$alignLeft": true
+				} ) {
+					name: "panel1"
+					add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.GridLayout ) ) {
+						name: "panel2"
+						"border": new javax.swing.border.TitledBorder( new com.jformdesigner.model.SwingBorder( "ComboBox.border" ), "Applications to install" )
+						"preferredSize": new java.awt.Dimension( 14, 26 )
+						add( new FormComponent( "javax.swing.JLabel" ) {
+							name: "label1"
+							"text": "TODO"
+						} )
+					}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
+						"gridy": 1
+					} )
+				}, new FormLayoutConstraints( null ) {
+					"title": "Applications"
+				} )
+				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.GridBagLayout ) {
+					"$columnSpecs": "0:1.0"
+					"$rowSpecs": "49, 0:1.0, 0, 0"
+					"$alignTop": true
+					"$alignLeft": true
+				} ) {
+					name: "panel4"
+					add( new FormComponent( "javax.swing.JTextArea" ) {
+						name: "textArea1"
+						"text": "Перед применением каких либо настроек во вкладке Tweaks рекомендуется сделать\nбэкап реестра (кнопка Backup Registry справа снизу)."
+						"editable": false
+						"font": new java.awt.Font( "JetBrains Mono ExtraBold", 0, 14 )
+						"foreground": new java.awt.Color( 255, 204, 0, 255 )
+					}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) )
+					add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.GridLayout ) ) {
+						name: "panel7"
+						add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.GridBagLayout ) {
+							"$columnSpecs": "0:1.0, 0"
+							"$rowSpecs": "0, 0, 0, 0, 0, 0, center:0, 0, 0, 0, 0"
+							"$hGap": 5
+							"$vGap": 5
+							"$alignLeft": true
+							"$alignTop": true
+						} ) {
+							name: "panel5"
+							"border": new javax.swing.border.TitledBorder( new com.jformdesigner.model.SwingBorder( "ComboBox.border" ), "General tweaks" )
+							add( new FormComponent( "javax.swing.JCheckBox" ) {
+								name: "checkBox1"
+								"text": "Telemetry"
+							}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
+								"hAlign": 2
+							} )
+							add( new FormComponent( "javax.swing.JCheckBox" ) {
+								name: "checkBox2"
+								"text": "Activity History"
+							}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
+								"gridy": 1
+								"hAlign": 2
+							} )
+							add( new FormComponent( "javax.swing.JCheckBox" ) {
+								name: "checkBox3"
+								"text": "Location Tracking"
+							}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
+								"gridy": 2
+								"hAlign": 2
+							} )
+							add( new FormComponent( "javax.swing.JCheckBox" ) {
+								name: "wifisense_checkbox"
+								"text": "Wifi-Sense"
+							}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
+								"gridy": 3
+								"hAlign": 2
+							} )
+							add( new FormComponent( "javax.swing.JCheckBox" ) {
+								name: "storagesense_checkbox"
+								"text": "Storage Sense"
+							}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
+								"gridy": 4
+								"hAlign": 2
+							} )
+							add( new FormComponent( "javax.swing.JCheckBox" ) {
+								name: "deltempfiles_checkbox"
+								"text": "Delete Temporary Files"
+							}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
+								"gridy": 5
+								"hAlign": 2
+							} )
+							add( new FormComponent( "javax.swing.JSeparator" ) {
+								name: "separator1"
+								"border": new javax.swing.border.TitledBorder( "text" )
+							}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
+								"gridy": 6
+								"gridwidth": 2
+							} )
+							add( new FormComponent( "javax.swing.JCheckBox" ) {
+								name: "disablecopilot_checkbox"
+								"text": "Disable Copilot"
+							}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
+								"gridy": 7
+								"hAlign": 2
+							} )
+							add( new FormComponent( "javax.swing.JCheckBox" ) {
+								name: "disablebackgroundapps_checkbox"
+								"text": "Disable Background Apps"
+							}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
+								"gridy": 8
+								"hAlign": 2
+							} )
+							add( new FormComponent( "javax.swing.JCheckBox" ) {
+								name: "removeonedrive_checkbox"
+								"text": "Remove OneDrive"
+							}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
+								"gridy": 9
+								"hAlign": 2
+							} )
+						} )
+						add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.GridBagLayout ) {
+							"$columnSpecs": "left:0:1.0"
+							"$rowSpecs": "0, 0, 0, 0, 0, 0, 0, 0, 0"
+							"$hGap": 5
+							"$vGap": 5
+							"$alignLeft": true
+							"$alignTop": true
+						} ) {
+							name: "panel6"
+							"border": new javax.swing.border.TitledBorder( new com.jformdesigner.model.SwingBorder( "ComboBox.border" ), "Other features" )
+							"componentOrientation": sfield java.awt.ComponentOrientation RIGHT_TO_LEFT
+							add( new FormComponent( "javax.swing.JRadioButton" ) {
+								name: "darktheme_btn"
+								"text": "Dark Theme"
+								addEvent( new FormEvent( "java.awt.event.ItemListener", "itemStateChanged", "DarkThemeChanged", true ) )
+								addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "darktheme_btnMouseClicked", true ) )
+							}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) )
+							add( new FormComponent( "javax.swing.JRadioButton" ) {
+								name: "recomends_btn"
+								"text": "Recommendations on block screen"
+								"enabled": false
+							}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
+								"gridy": 1
+							} )
+							add( new FormComponent( "javax.swing.JRadioButton" ) {
+								name: "bingsearch_btn"
+								"text": "Bing Search in Start Menu"
+								addEvent( new FormEvent( "java.awt.event.ItemListener", "itemStateChanged", "BingSearchChanged", true ) )
+							}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
+								"gridy": 2
+							} )
+							add( new FormComponent( "javax.swing.JRadioButton" ) {
+								name: "showhiddenfiles_btn"
+								"text": "Show hidden files"
+								addEvent( new FormEvent( "java.awt.event.ItemListener", "itemStateChanged", "ShowHiddenFilesChanged", true ) )
+							}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
+								"gridy": 3
+							} )
+							add( new FormComponent( "javax.swing.JRadioButton" ) {
+								name: "showfileext_btn"
+								"text": "Show file extensions"
+								addEvent( new FormEvent( "java.awt.event.ItemListener", "itemStateChanged", "ShowFileExtChanged", true ) )
+							}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
+								"gridy": 4
+							} )
+							add( new FormComponent( "javax.swing.JRadioButton" ) {
+								name: "searchbtn_btn"
+								"text": "Search Button in TaskBar"
+								addEvent( new FormEvent( "java.awt.event.ItemListener", "itemStateChanged", "SearchBtnChanged", true ) )
+							}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
+								"gridy": 5
+							} )
+							add( new FormComponent( "javax.swing.JRadioButton" ) {
+								name: "centeritems_btn"
+								"text": "Center items in TaskBar"
+								addEvent( new FormEvent( "java.awt.event.ItemListener", "itemStateChanged", "CenterItemsChanged", true ) )
+							}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
+								"gridy": 6
+							} )
+						} )
+					}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
+						"gridy": 1
+					} )
+					add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
+						"$horizontalGroup": "par l {seq {comp button3:::p::p, space :0:0:p, comp button4:::p::p, space ::422:x, comp button2:::p::p}}"
+						"$verticalGroup": "par l {comp button3:::p::p, par b {comp button4::b:p::p, comp button2::b:p::p}}"
+					} ) {
+						name: "panel8"
+						add( new FormComponent( "javax.swing.JButton" ) {
+							name: "button3"
+							"text": "Execute"
+							addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "button3MouseClicked", true ) )
+						} )
+						add( new FormComponent( "javax.swing.JButton" ) {
+							name: "button4"
+							"text": "Clear"
+							addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "ClearBtnClicked", true ) )
+						} )
+						add( new FormComponent( "javax.swing.JButton" ) {
+							name: "button2"
+							"text": "Backup Registry"
+							addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "button2MouseClicked", true ) )
+						} )
+					}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
+						"gridy": 3
+					} )
+				}, new FormLayoutConstraints( null ) {
+					"title": "Tweaks"
+				} )
+			} )
+			menuBar: new FormContainer( "javax.swing.JMenuBar", new FormLayoutManager( class javax.swing.JMenuBar ) ) {
+				name: "menuBar1"
+				"componentOrientation": sfield java.awt.ComponentOrientation RIGHT_TO_LEFT
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "button1"
+					"icon": new com.jformdesigner.model.SwingIcon( 0, "/resources/userdark.svg" )
+					"minimumSize": new java.awt.Dimension( 30, 30 )
+					"maximumSize": new java.awt.Dimension( 30, 30 )
+					"borderPainted": false
+					"background": new java.awt.Color( 30, 30, 30, 255 )
+					addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "button1MouseClicked", true ) )
+					addEvent( new FormEvent( "javax.swing.event.ChangeListener", "stateChanged", "button1StateChanged", true ) )
+					addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "button1MouseClicked", true ) )
+				} )
+			}
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 0, 0 )
+			"size": new java.awt.Dimension( 695, 480 )
+		} )
+	}
+}
