@@ -23,9 +23,29 @@ new FormModel {
 						name: "panel2"
 						"border": new javax.swing.border.TitledBorder( new com.jformdesigner.model.SwingBorder( "ComboBox.border" ), "Applications to install" )
 						"preferredSize": new java.awt.Dimension( 14, 26 )
-						add( new FormComponent( "javax.swing.JLabel" ) {
-							name: "label1"
-							"text": "TODO"
+						add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+							name: "scrollPane1"
+							add( new FormComponent( "javax.swing.JTable" ) {
+								name: "AppsTable"
+								"model": new com.jformdesigner.model.SwingTableModel( new java.util.Vector, new java.util.Vector {
+									add( "Name" )
+									add( "Category" )
+									add( "Install?" )
+								}, new java.util.Vector {
+									add( class java.lang.String )
+									add( class java.lang.String )
+									add( class java.lang.Boolean )
+								}, new java.util.Vector {
+									add( false )
+									add( false )
+									add( null )
+								}, new java.util.Vector {
+									add( null )
+									add( null )
+									add( null )
+								} )
+								"autoCreateRowSorter": true
+							} )
 						} )
 					}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
 						"gridy": 1

@@ -1,16 +1,11 @@
-import General.PowerTools;
-import Interfaces.PowerRegistryAdditions;
 import UI.Windows.MainWindow;
 
+public class Main {
 
-import java.io.IOException;
-
-public class Main implements PowerRegistryAdditions {
-
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         System.out.println(System.getProperty("os.name"));
+
         MainWindow.initialize();
     }
-
-
 }
+

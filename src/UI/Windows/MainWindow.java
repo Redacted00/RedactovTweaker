@@ -7,9 +7,11 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
+import java.util.Iterator;
 import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.event.*;
+import javax.swing.table.*;
 import General.MainProvider;
 import General.PowerTools;
 import Interfaces.TweaksInterface;
@@ -18,8 +20,8 @@ import com.formdev.flatlaf.extras.*;
 import com.formdev.flatlaf.themes.FlatMacDarkLaf;
 import com.github.tuupertunut.powershelllibjava.PowerShellExecutionException;
 
-
 import com.sun.jna.platform.win32.Win32Exception;
+import org.json.JSONObject;
 
 
 /**
@@ -43,6 +45,7 @@ public class MainWindow extends JFrame implements TweaksInterface {
     public MainWindow() {
         initComponents();
         initRadioButtons();
+        initAppsTable();
         TweaksCheckboxes = new JCheckBox[]{checkBox1, checkBox2, checkBox3, wifisense_checkbox, storagesense_checkbox, deltempfiles_checkbox, disablecopilot_checkbox, disablebackgroundapps_checkbox, removeonedrive_checkbox};
         menuBar1.add(Box.createHorizontalGlue());
         setSize(720,480);
@@ -64,7 +67,32 @@ public class MainWindow extends JFrame implements TweaksInterface {
         //UIManager.put("TitlePane.buttonSize", new Dimension(20,3));
         UIManager.put("TitlePane.borderColor", new Color(40,40,40,255));
         UIManager.put("TabbedPane.tabType", "card");
+        UIManager.put("Table.alternateRowColor", new Color(48, 48, 48));
         mainw = new MainWindow();
+    }
+
+    public void initAppsTable() {
+        AppsTable.setRowSelectionAllowed(false);
+        DefaultTableModel model = (DefaultTableModel) AppsTable.getModel();
+        //model.addRow(new Object[]{"PowerToys","Utilities",false});
+
+                JSONObject jo = new JSONObject("{\n" +
+                "  \"Tools\": {\n" +
+                "    \"Test1\" : \"fff1\",\n" +
+                "    \"Test2\" : \"fff2\",\n" +
+                "    \"Test3\" : \"fff3\",\n" +
+                "    \"Test4\" : \"fff4\"\n" +
+                "  },\n" +
+                "  \"Utilities\": {\n" +
+                "    \"Test1\" : \"fff5\",\n" +
+                "    \"Test2\" : \"fff6\",\n" +
+                "    \"Test3\" : \"fff7\",\n" +
+                "    \"Test4\" : \"fff8\"\n" +
+                "  }\n" +
+                "}");
+
+        Iterator<String> keys = jo.keys();
+
     }
 
     public void initRadioButtons() {
@@ -251,7 +279,8 @@ public class MainWindow extends JFrame implements TweaksInterface {
         tabbedPane1 = new JTabbedPane();
         panel1 = new JPanel();
         panel2 = new JPanel();
-        label1 = new JLabel();
+        scrollPane1 = new JScrollPane();
+        AppsTable = new JTable();
         panel4 = new JPanel();
         textArea1 = new JTextArea();
         panel7 = new JPanel();
@@ -314,12 +343,12 @@ public class MainWindow extends JFrame implements TweaksInterface {
 
             //======== panel1 ========
             {
-                panel1.setBorder (new javax. swing. border. CompoundBorder( new javax .swing .border .TitledBorder (new javax. swing. border
-                . EmptyBorder( 0, 0, 0, 0) , "JFor\u006dDesi\u0067ner \u0045valu\u0061tion", javax. swing. border. TitledBorder. CENTER, javax
-                . swing. border. TitledBorder. BOTTOM, new java .awt .Font ("Dia\u006cog" ,java .awt .Font .BOLD ,
-                12 ), java. awt. Color. red) ,panel1. getBorder( )) ); panel1. addPropertyChangeListener (new java. beans
-                . PropertyChangeListener( ){ @Override public void propertyChange (java .beans .PropertyChangeEvent e) {if ("bord\u0065r" .equals (e .
-                getPropertyName () )) throw new RuntimeException( ); }} );
+                panel1.setBorder(new javax.swing.border.CompoundBorder(new javax.swing.border.TitledBorder(new javax.swing.border
+                .EmptyBorder(0,0,0,0), "JF\u006frm\u0044es\u0069gn\u0065r \u0045va\u006cua\u0074io\u006e",javax.swing.border.TitledBorder.CENTER,javax
+                .swing.border.TitledBorder.BOTTOM,new java.awt.Font("D\u0069al\u006fg",java.awt.Font.BOLD,
+                12),java.awt.Color.red),panel1. getBorder()));panel1. addPropertyChangeListener(new java.beans
+                .PropertyChangeListener(){@Override public void propertyChange(java.beans.PropertyChangeEvent e){if("\u0062or\u0064er".equals(e.
+                getPropertyName()))throw new RuntimeException();}});
                 panel1.setLayout(new GridBagLayout());
                 ((GridBagLayout)panel1.getLayout()).columnWidths = new int[] {0, 0};
                 ((GridBagLayout)panel1.getLayout()).rowHeights = new int[] {8, 0, 0};
@@ -332,9 +361,36 @@ public class MainWindow extends JFrame implements TweaksInterface {
                     panel2.setPreferredSize(new Dimension(14, 26));
                     panel2.setLayout(new GridLayout());
 
-                    //---- label1 ----
-                    label1.setText("TODO");
-                    panel2.add(label1);
+                    //======== scrollPane1 ========
+                    {
+
+                        //---- AppsTable ----
+                        AppsTable.setModel(new DefaultTableModel(
+                            new Object[][] {
+                            },
+                            new String[] {
+                                "Name", "Category", "Install?"
+                            }
+                        ) {
+                            Class<?>[] columnTypes = new Class<?>[] {
+                                String.class, String.class, Boolean.class
+                            };
+                            boolean[] columnEditable = new boolean[] {
+                                false, false, true
+                            };
+                            @Override
+                            public Class<?> getColumnClass(int columnIndex) {
+                                return columnTypes[columnIndex];
+                            }
+                            @Override
+                            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                                return columnEditable[columnIndex];
+                            }
+                        });
+                        AppsTable.setAutoCreateRowSorter(true);
+                        scrollPane1.setViewportView(AppsTable);
+                    }
+                    panel2.add(scrollPane1);
                 }
                 panel1.add(panel2, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0,
                     GridBagConstraints.CENTER, GridBagConstraints.BOTH,
@@ -575,7 +631,8 @@ public class MainWindow extends JFrame implements TweaksInterface {
     private JTabbedPane tabbedPane1;
     private JPanel panel1;
     private JPanel panel2;
-    private JLabel label1;
+    private JScrollPane scrollPane1;
+    private JTable AppsTable;
     private JPanel panel4;
     private JTextArea textArea1;
     private JPanel panel7;
