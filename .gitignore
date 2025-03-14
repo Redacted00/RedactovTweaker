@@ -30,3 +30,4 @@ bin/
 
 Registry_CurrentUser_Backup
 Registry_LocalMachine_Backup
+/.temp/

@@ -14,12 +14,17 @@ new FormModel {
 				"selectedIndex": 1
 				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.GridBagLayout ) {
 					"$columnSpecs": "0:1.0"
-					"$rowSpecs": "8, 0:1.0"
+					"$rowSpecs": "0, 333:1.0, 8"
 					"$alignTop": true
 					"$alignLeft": true
 				} ) {
 					name: "panel1"
-					add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.GridLayout ) ) {
+					add( new FormComponent( "javax.swing.JTextField" ) {
+						name: "textField1"
+						"toolTipText": "Search"
+						"border": new com.formdev.flatlaf.ui.FlatTextBorder
+					}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) )
+					add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class javax.swing.BoxLayout ) ) {
 						name: "panel2"
 						"border": new javax.swing.border.TitledBorder( new com.jformdesigner.model.SwingBorder( "ComboBox.border" ), "Applications to install" )
 						"preferredSize": new java.awt.Dimension( 14, 26 )
@@ -30,25 +35,37 @@ new FormModel {
 								"model": new com.jformdesigner.model.SwingTableModel( new java.util.Vector, new java.util.Vector {
 									add( "Name" )
 									add( "Category" )
+									add( "Link" )
 									add( "Install?" )
 								}, new java.util.Vector {
 									add( class java.lang.String )
 									add( class java.lang.String )
+									add( null )
 									add( class java.lang.Boolean )
 								}, new java.util.Vector {
 									add( false )
 									add( false )
+									add( false )
 									add( null )
 								}, new java.util.Vector {
 									add( null )
 									add( null )
 									add( null )
+									add( null )
 								} )
-								"autoCreateRowSorter": true
+								"rowSelectionAllowed": false
+								addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "AppsTableMouseClicked", true ) )
 							} )
 						} )
 					}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
 						"gridy": 1
+					} )
+					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "button5"
+						"text": "Install"
+						addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "InstallButtonClicked", true ) )
+					}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
+						"gridy": 2
 					} )
 				}, new FormLayoutConstraints( null ) {
 					"title": "Applications"
@@ -237,6 +254,133 @@ new FormModel {
 					} )
 				}, new FormLayoutConstraints( null ) {
 					"title": "Tweaks"
+				} )
+				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.GridBagLayout ) {
+					"$columnSpecs": "0:1.0"
+					"$rowSpecs": "0:1.0, 0"
+					"$alignTop": true
+					"$alignLeft": true
+					"$vGap": 5
+				} ) {
+					name: "panel3"
+					add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.GridLayout ) {
+						"rows": 4
+						"vgap": 5
+					} ) {
+						name: "panel9"
+						add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.GridBagLayout ) {
+							"$columnSpecs": "0, 0"
+							"$rowSpecs": "0"
+							"$hGap": 5
+							"$vGap": 5
+							"$alignLeft": true
+							"$alignTop": true
+						} ) {
+							name: "HWIDActivationPanel"
+							"border": &SwingBorder0 new com.jformdesigner.model.SwingBorder( "ComboBox.border" )
+							add( new FormComponent( "javax.swing.JButton" ) {
+								name: "HWIDActivationBtn"
+								"text": "HWID"
+								addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "HWIDActivationBtnMouseClicked", true ) )
+							}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) )
+							add( new FormComponent( "javax.swing.JLabel" ) {
+								name: "label2"
+								"text": "Permanent / Requires Internet Connection "
+							}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
+								"gridx": 1
+							} )
+						} )
+						add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.GridBagLayout ) {
+							"$columnSpecs": "0, 0"
+							"$rowSpecs": "0"
+							"$hGap": 5
+							"$vGap": 5
+							"$alignLeft": true
+							"$alignTop": true
+						} ) {
+							name: "OhookActivationPanel"
+							"border": #SwingBorder0
+							add( new FormComponent( "javax.swing.JButton" ) {
+								name: "OhookActivationBtn"
+								"text": "Ohook"
+								addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "OhookActivationBtnMouseClicked", true ) )
+							}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) )
+							add( new FormComponent( "javax.swing.JLabel" ) {
+								name: "label3"
+								"text": "Permanent / Office activation"
+							}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
+								"gridx": 1
+							} )
+						} )
+						add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.GridBagLayout ) {
+							"$columnSpecs": "0, 0"
+							"$rowSpecs": "0"
+							"$hGap": 5
+							"$vGap": 5
+							"$alignLeft": true
+							"$alignTop": true
+						} ) {
+							name: "KMS38ActivationPanel"
+							"border": #SwingBorder0
+							add( new FormComponent( "javax.swing.JButton" ) {
+								name: "KMS38ActivationBtn"
+								"text": "KMS38"
+								addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "KMS38ActivationBtnMouseClicked", true ) )
+							}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) )
+							add( new FormComponent( "javax.swing.JLabel" ) {
+								name: "label4"
+								"text": "Till the Year 2038 "
+							}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
+								"gridx": 1
+							} )
+						} )
+					}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
+						"vAlign": 0
+						"hAlign": 0
+					} )
+					add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.GridBagLayout ) {
+						"$columnSpecs": "0:1.0, 0:1.0"
+						"$rowSpecs": "0:1.0"
+						"$alignTop": true
+						"$alignLeft": true
+						"$hGap": 3
+					} ) {
+						name: "panel11"
+						add( new FormComponent( "javax.swing.JLabel" ) {
+							name: "label1"
+							"text": "Activation methods made by MASSGRAVE team"
+						}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) )
+						add( new FormComponent( "javax.swing.JLabel" ) {
+							name: "label5"
+							"text": "(?)"
+							"foreground": new java.awt.Color( 102, 102, 102, 255 )
+							"cursor": new java.awt.Cursor( 12 )
+							addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "aboutMassgraveTeamPressed", true ) )
+						}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
+							"gridx": 1
+						} )
+					}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
+						"gridy": 1
+						"hAlign": 0
+					} )
+				}, new FormLayoutConstraints( null ) {
+					"title": "Activation"
+				} )
+				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.GridBagLayout ) {
+					"$columnSpecs": "0, 0"
+					"$rowSpecs": "0, 0, 0"
+					"$hGap": 5
+					"$vGap": 5
+					"$alignLeft": true
+					"$alignTop": true
+				} ) {
+					name: "panel10"
+					add( new FormComponent( "javax.swing.JLabel" ) {
+						name: "label6"
+						"text": "text"
+					}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) )
+				}, new FormLayoutConstraints( null ) {
+					"title": "Settings"
 				} )
 			} )
 			menuBar: new FormContainer( "javax.swing.JMenuBar", new FormLayoutManager( class javax.swing.JMenuBar ) ) {

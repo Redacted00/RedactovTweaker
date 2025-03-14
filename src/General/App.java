@@ -30,4 +30,8 @@ public class App {
         return WingetID;
     }
 
+    public String getCategory() {
+        return Category;
+    }
+
 }

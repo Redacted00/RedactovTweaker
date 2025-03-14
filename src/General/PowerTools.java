@@ -4,11 +4,9 @@ import com.github.tuupertunut.powershelllibjava.PowerShell;
 import com.github.tuupertunut.powershelllibjava.PowerShellExecutionException;
 
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.nio.file.Path;
+import java.io.*;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.*;
 
 import com.sun.jna.platform.win32.Advapi32Util;
@@ -76,10 +74,33 @@ public class PowerTools {
 
     }
 
+    public static String getContentFromURL(String e) {
+        URL url = null;
+        BufferedReader in = null;
+        StringBuilder output = new StringBuilder();
+        String inputLine;
+        try {
+            url = new URL(e);
+            in = new BufferedReader(
+                    new InputStreamReader(url.openStream()));
+            while ((inputLine = in.readLine()) != null)
+                output.append(inputLine);
+            in.close();
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
+
+        return output.toString();
+    }
+
     public static Map<String, App> initApps() {
 
-        String jsFile = openFile(String.valueOf("C:\\Users\\Redactov\\IdeaProjects\\RedactovTweaker\\src\\resources\\test.json"));
-        JSONObject apps = new JSONObject(jsFile);
+        //https://pastebin.com/raw/kUHvgmYv
+        String appsURL = getContentFromURL("https://pastebin.com/raw/kUHvgmYv");
+
+        //String jsFile = appsURL;
+        System.out.println(appsURL);
+        JSONObject apps = new JSONObject(appsURL);
 
         Map<String, App> map = new HashMap<>(Map.of());
         for (var x : apps.toMap().entrySet()) {
@@ -90,10 +111,29 @@ public class PowerTools {
             for (var rofls : myList) {
                 Map<String, Object> appInfo = (HashMap) rofls;
                 map.put(appInfo.get("Name").toString(), new App(appInfo.get("Name").toString(), category, appInfo.get("Link").toString(), appInfo.get("ID").toString()));
-                //System.out.println(rr.get("Name") + " | " + rr.get("Link") + " | " + rr.get("ID"));
+                //System.out.println(appInfo.get("Name") + " | " + appInfo.get("Link") + " | " + appInfo.get("ID"));
             }
         }
         return map;
+    }
+
+    public int installApps(List<App> e) {
+        StringBuilder command = new StringBuilder();
+        command.append("winget install ");
+
+        for (var app : e) {
+            command.append(app.getWingetID()).append(" ");
+        }
+
+        try {
+            shell.executeCommands(command.toString());
+        } catch (PowerShellExecutionException ex) {
+            return -1;
+        } catch (IOException ex) {
+            return -2;
+        }
+
+        return 1;
     }
 
     // About Copilot

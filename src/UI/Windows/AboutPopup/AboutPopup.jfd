@@ -7,8 +7,8 @@ new FormModel {
 			name: "this"
 			"title": "About"
 			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.GridBagLayout ) {
-				"$columnSpecs": "0, 0"
-				"$rowSpecs": "0, 0, 0"
+				"$columnSpecs": "0:1.0"
+				"$rowSpecs": "0"
 				"$hGap": 5
 				"$vGap": 5
 				"$alignLeft": true
@@ -16,20 +16,13 @@ new FormModel {
 			} ) {
 				name: "panel1"
 				add( new FormComponent( "javax.swing.JLabel" ) {
-					name: "label2"
-					"text": "Redactov Tweaker - 0.1A"
-					"font": new com.jformdesigner.model.SwingDerivedFont( null, 1, 0, false )
-				}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) )
-				add( new FormComponent( "javax.swing.JLabel" ) {
 					name: "label1"
-					"text": "Made by Redacted00"
-				}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
-					"gridy": 1
-				} )
+					"text": "Redacted's Tweaked 0.2A"
+				}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) )
 			} )
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 0, 0 )
-			"size": new java.awt.Dimension( 405, 135 )
+			"size": new java.awt.Dimension( 405, 185 )
 		} )
 	}
 }

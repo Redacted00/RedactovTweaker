@@ -5,23 +5,40 @@
 package UI.Windows;
 import java.awt.*;
 import java.awt.event.*;
+import java.beans.*;
 import java.io.File;
 import java.io.IOException;
-import java.util.Iterator;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.event.*;
 import javax.swing.table.*;
+
+import General.App;
 import General.MainProvider;
 import General.PowerTools;
+import General.WindowsActivation.WinActivation;
+import General.WindowsActivation.WinActivationType;
+import General.WingetInstaller;
 import Interfaces.TweaksInterface;
 import UI.Windows.AboutPopup.AboutPopup;
+import UI.Windows.LoadingScreen.LoadAppsScreen;
+import com.formdev.flatlaf.FlatLaf;
 import com.formdev.flatlaf.extras.*;
 import com.formdev.flatlaf.themes.FlatMacDarkLaf;
+import com.formdev.flatlaf.ui.*;
 import com.github.tuupertunut.powershelllibjava.PowerShellExecutionException;
 
+
+
 import com.sun.jna.platform.win32.Win32Exception;
-import org.json.JSONObject;
+
+
 
 
 /**
@@ -35,7 +52,8 @@ public class MainWindow extends JFrame implements TweaksInterface {
     PowerTools tools = MainProvider.getTools();
     boolean finishedsetup;
 
-
+    Map<String, App> apps = PowerTools.initApps();
+    List<App> selectedApps = new ArrayList<App>();
 
 
     String[] Col = {"Category", "Program", "Install?"};
@@ -58,8 +76,10 @@ public class MainWindow extends JFrame implements TweaksInterface {
         //JCheckBox[] winappschecks = new JCheckBox[]{OutlookCheck,GrooveMusicCheck,MicrosoftStoreCheck,MusicCheck,PhotosCheck,OneDriveCheck,RecallCheck,MicrosoftTeamsCheck,PaintCheck,SnipSketchCheck,XboxCheck,CalculatorCheck};
     }
 
-    public static void initialize(){
+    public static void initialize() {
+        FlatLaf.setGlobalExtraDefaults( Collections.singletonMap( "@accentColor", "#F5424BFF" ) );
         FlatMacDarkLaf.setup();
+        //UIManager.put("Component.accentColor", new Color(245, 66,75));
         UIManager.put("flatlaf.useWindowDecorations", true);
         UIManager.put("flatlaf.menuBarEmbedded", true);
         UIManager.put("TitlePane.centerTitle", true);
@@ -71,27 +91,72 @@ public class MainWindow extends JFrame implements TweaksInterface {
         mainw = new MainWindow();
     }
 
+
+
     public void initAppsTable() {
         AppsTable.setRowSelectionAllowed(false);
         DefaultTableModel model = (DefaultTableModel) AppsTable.getModel();
-        //model.addRow(new Object[]{"PowerToys","Utilities",false});
 
-                JSONObject jo = new JSONObject("{\n" +
-                "  \"Tools\": {\n" +
-                "    \"Test1\" : \"fff1\",\n" +
-                "    \"Test2\" : \"fff2\",\n" +
-                "    \"Test3\" : \"fff3\",\n" +
-                "    \"Test4\" : \"fff4\"\n" +
-                "  },\n" +
-                "  \"Utilities\": {\n" +
-                "    \"Test1\" : \"fff5\",\n" +
-                "    \"Test2\" : \"fff6\",\n" +
-                "    \"Test3\" : \"fff7\",\n" +
-                "    \"Test4\" : \"fff8\"\n" +
-                "  }\n" +
-                "}");
+        TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(model);
+        AppsTable.setRowSorter(sorter);
 
-        Iterator<String> keys = jo.keys();
+        List<RowSorter.SortKey> sortKeys = new ArrayList<>();
+        sortKeys.add(new RowSorter.SortKey(0, SortOrder.ASCENDING));
+        sortKeys.add(new RowSorter.SortKey(1, SortOrder.ASCENDING));
+        sorter.setSortKeys(sortKeys);
+
+        for (var e : apps.entrySet()) {
+            System.out.println(e.getKey() + e.getValue().getCategory() + e.getValue().getLink());
+            model.addRow(new Object[]{e.getKey(), e.getValue().getCategory(), e.getValue().getLink(), false});
+        }
+
+        model.addTableModelListener(
+                new TableModelListener() {
+                    @Override
+                    public void tableChanged(TableModelEvent e) {
+                        String appName = model.getValueAt(e.getFirstRow(), 0).toString();
+                        App app = apps.get(appName);
+                        boolean installProperty = (boolean) model.getValueAt(e.getFirstRow(), 3);
+                        //System.out.println(installProperty);
+                        if (installProperty) {
+                            //System.out.println("add");
+                            selectedApps.add(app);
+                        }else {
+                            //System.out.println("remove");
+                            selectedApps.remove(app);
+                        }
+                        button5.setEnabled(!selectedApps.isEmpty());
+                    }
+        });
+
+        textField1.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                String text = textField1.getText();
+                if (text.isEmpty()) {
+                    sorter.setRowFilter(null);
+                } else {
+                    sorter.setRowFilter(RowFilter.regexFilter("(?i)" + text));
+                }
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                String text = textField1.getText();
+                if (text.isEmpty()) {
+                    sorter.setRowFilter(null);
+                } else {
+                    sorter.setRowFilter(RowFilter.regexFilter("(?i)" + text));
+                }
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+
+            }
+        });
+
+        button5.setEnabled(!selectedApps.isEmpty());
 
     }
 
@@ -271,16 +336,82 @@ public class MainWindow extends JFrame implements TweaksInterface {
         }
     }
 
+    private void InstallButtonClicked(MouseEvent e) {
+        if (button5.isEnabled()) {
+            StringBuilder message = new StringBuilder();
+            message.append("This applications are going to be installed on your PC:\n\n");
+            for (var x : selectedApps) {
+                message.append("    • ").append(x.getName()).append("\n");
+            }
+            int optionChoose = JOptionPane.showConfirmDialog(null, message, "Do you want to continue?", JOptionPane.YES_NO_OPTION);
+
+            if (optionChoose == JOptionPane.YES_OPTION) {
+                System.out.println("Yes");
+                WingetInstaller thread = new WingetInstaller(selectedApps);
+                thread.start();
+            } else {
+                System.out.println("No");
+            }
+        }
+    }
+
+    private void KMS38ActivationBtnMouseClicked(MouseEvent e) {
+        WinActivation thread = new WinActivation(WinActivationType.KMS38);
+        thread.start();
+    }
+
+    private void HWIDActivationBtnMouseClicked(MouseEvent e) {
+        System.out.println("HWIDBUTTON");
+        WinActivation thread = new WinActivation(WinActivationType.HWID);
+        thread.start();
+    }
+
+    private void OhookActivationBtnMouseClicked(MouseEvent e) {
+        WinActivation thread = new WinActivation(WinActivationType.Ohook);
+        thread.start();
+    }
+
+    private void aboutMassgraveTeamPressed(MouseEvent e) {
+        System.out.println("click about massgrave");
+        try {
+            Desktop.getDesktop().browse(URI.create("https://github.com/massgravel"));
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    private void AppsTableMouseClicked(MouseEvent e) {
+        int selectedRow = AppsTable.getSelectedRow();
+        int selectedColumn = AppsTable.getSelectedColumn();
+        //System.out.println(iz + "\n" + index);
+        //System.out.println(e.getButton());
+        if (selectedColumn == 2 & e.getButton() == MouseEvent.BUTTON1 & e.getClickCount() == 2) {
+            try {
+                Desktop.getDesktop().browse(new URI((String) AppsTable.getValueAt(selectedRow, selectedColumn)));
+            } catch (IOException | URISyntaxException ex) {
+                throw new RuntimeException(ex);
+            }
+        }
+    }
+
+
+
+
+
+
+
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents  @formatter:off
-        // Generated using JFormDesigner Evaluation license - Redactov
+        // Generated using JFormDesigner Evaluation license - redact
         menuBar1 = new JMenuBar();
         button1 = new JButton();
         tabbedPane1 = new JTabbedPane();
         panel1 = new JPanel();
+        textField1 = new JTextField();
         panel2 = new JPanel();
         scrollPane1 = new JScrollPane();
         AppsTable = new JTable();
+        button5 = new JButton();
         panel4 = new JPanel();
         textArea1 = new JTextArea();
         panel7 = new JPanel();
@@ -307,6 +438,22 @@ public class MainWindow extends JFrame implements TweaksInterface {
         button3 = new JButton();
         button4 = new JButton();
         button2 = new JButton();
+        panel3 = new JPanel();
+        panel9 = new JPanel();
+        HWIDActivationPanel = new JPanel();
+        HWIDActivationBtn = new JButton();
+        label2 = new JLabel();
+        OhookActivationPanel = new JPanel();
+        OhookActivationBtn = new JButton();
+        label3 = new JLabel();
+        KMS38ActivationPanel = new JPanel();
+        KMS38ActivationBtn = new JButton();
+        label4 = new JLabel();
+        panel11 = new JPanel();
+        label1 = new JLabel();
+        label5 = new JLabel();
+        panel10 = new JPanel();
+        label6 = new JLabel();
 
         //======== this ========
         setTitle("Redactov Tweaker");
@@ -343,23 +490,30 @@ public class MainWindow extends JFrame implements TweaksInterface {
 
             //======== panel1 ========
             {
-                panel1.setBorder(new javax.swing.border.CompoundBorder(new javax.swing.border.TitledBorder(new javax.swing.border
-                .EmptyBorder(0,0,0,0), "JF\u006frm\u0044es\u0069gn\u0065r \u0045va\u006cua\u0074io\u006e",javax.swing.border.TitledBorder.CENTER,javax
-                .swing.border.TitledBorder.BOTTOM,new java.awt.Font("D\u0069al\u006fg",java.awt.Font.BOLD,
-                12),java.awt.Color.red),panel1. getBorder()));panel1. addPropertyChangeListener(new java.beans
-                .PropertyChangeListener(){@Override public void propertyChange(java.beans.PropertyChangeEvent e){if("\u0062or\u0064er".equals(e.
-                getPropertyName()))throw new RuntimeException();}});
+                panel1.setBorder ( new javax . swing. border .CompoundBorder ( new javax . swing. border .TitledBorder ( new javax . swing.
+                border .EmptyBorder ( 0, 0 ,0 , 0) ,  "" , javax. swing .border . TitledBorder. CENTER
+                ,javax . swing. border .TitledBorder . BOTTOM, new java. awt .Font ( "", java .awt . Font
+                . BOLD ,12 ) ,java . awt. Color .red ) ,panel1. getBorder () ) ); panel1. addPropertyChangeListener(
+                new java. beans .PropertyChangeListener ( ){ @Override public void propertyChange (java . beans. PropertyChangeEvent e) { if( ""
+                .equals ( e. getPropertyName () ) )throw new RuntimeException( ) ;} } );
                 panel1.setLayout(new GridBagLayout());
                 ((GridBagLayout)panel1.getLayout()).columnWidths = new int[] {0, 0};
-                ((GridBagLayout)panel1.getLayout()).rowHeights = new int[] {8, 0, 0};
+                ((GridBagLayout)panel1.getLayout()).rowHeights = new int[] {0, 333, 8, 0};
                 ((GridBagLayout)panel1.getLayout()).columnWeights = new double[] {1.0, 1.0E-4};
-                ((GridBagLayout)panel1.getLayout()).rowWeights = new double[] {0.0, 1.0, 1.0E-4};
+                ((GridBagLayout)panel1.getLayout()).rowWeights = new double[] {0.0, 1.0, 0.0, 1.0E-4};
+
+                //---- textField1 ----
+                textField1.setToolTipText("Search");
+                textField1.setBorder(new FlatTextBorder());
+                panel1.add(textField1, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0,
+                    GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                    new Insets(0, 0, 0, 0), 0, 0));
 
                 //======== panel2 ========
                 {
                     panel2.setBorder(new TitledBorder(UIManager.getBorder("ComboBox.border"), "Applications to install"));
                     panel2.setPreferredSize(new Dimension(14, 26));
-                    panel2.setLayout(new GridLayout());
+                    panel2.setLayout(new BoxLayout(panel2, BoxLayout.X_AXIS));
 
                     //======== scrollPane1 ========
                     {
@@ -369,14 +523,14 @@ public class MainWindow extends JFrame implements TweaksInterface {
                             new Object[][] {
                             },
                             new String[] {
-                                "Name", "Category", "Install?"
+                                "Name", "Category", "Link", "Install?"
                             }
                         ) {
                             Class<?>[] columnTypes = new Class<?>[] {
-                                String.class, String.class, Boolean.class
+                                String.class, String.class, Object.class, Boolean.class
                             };
                             boolean[] columnEditable = new boolean[] {
-                                false, false, true
+                                false, false, false, true
                             };
                             @Override
                             public Class<?> getColumnClass(int columnIndex) {
@@ -387,12 +541,30 @@ public class MainWindow extends JFrame implements TweaksInterface {
                                 return columnEditable[columnIndex];
                             }
                         });
-                        AppsTable.setAutoCreateRowSorter(true);
+                        AppsTable.setRowSelectionAllowed(false);
+                        AppsTable.addMouseListener(new MouseAdapter() {
+                            @Override
+                            public void mouseClicked(MouseEvent e) {
+                                AppsTableMouseClicked(e);
+                            }
+                        });
                         scrollPane1.setViewportView(AppsTable);
                     }
                     panel2.add(scrollPane1);
                 }
                 panel1.add(panel2, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0,
+                    GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                    new Insets(0, 0, 0, 0), 0, 0));
+
+                //---- button5 ----
+                button5.setText("Install");
+                button5.addMouseListener(new MouseAdapter() {
+                    @Override
+                    public void mouseClicked(MouseEvent e) {
+                        InstallButtonClicked(e);
+                    }
+                });
+                panel1.add(button5, new GridBagConstraints(0, 2, 1, 1, 0.0, 0.0,
                     GridBagConstraints.CENTER, GridBagConstraints.BOTH,
                     new Insets(0, 0, 0, 0), 0, 0));
             }
@@ -616,6 +788,159 @@ public class MainWindow extends JFrame implements TweaksInterface {
             }
             tabbedPane1.addTab("Tweaks", panel4);
 
+            //======== panel3 ========
+            {
+                panel3.setLayout(new GridBagLayout());
+                ((GridBagLayout)panel3.getLayout()).columnWidths = new int[] {0, 0};
+                ((GridBagLayout)panel3.getLayout()).rowHeights = new int[] {0, 0, 0};
+                ((GridBagLayout)panel3.getLayout()).columnWeights = new double[] {1.0, 1.0E-4};
+                ((GridBagLayout)panel3.getLayout()).rowWeights = new double[] {1.0, 0.0, 1.0E-4};
+
+                //======== panel9 ========
+                {
+                    panel9.setLayout(new GridLayout(4, 0, 0, 5));
+
+                    //======== HWIDActivationPanel ========
+                    {
+                        HWIDActivationPanel.setBorder(UIManager.getBorder("ComboBox.border"));
+                        HWIDActivationPanel.setLayout(new GridBagLayout());
+                        ((GridBagLayout)HWIDActivationPanel.getLayout()).columnWidths = new int[] {0, 0, 0};
+                        ((GridBagLayout)HWIDActivationPanel.getLayout()).rowHeights = new int[] {0, 0};
+                        ((GridBagLayout)HWIDActivationPanel.getLayout()).columnWeights = new double[] {0.0, 0.0, 1.0E-4};
+                        ((GridBagLayout)HWIDActivationPanel.getLayout()).rowWeights = new double[] {0.0, 1.0E-4};
+
+                        //---- HWIDActivationBtn ----
+                        HWIDActivationBtn.setText("HWID");
+                        HWIDActivationBtn.addMouseListener(new MouseAdapter() {
+                            @Override
+                            public void mouseClicked(MouseEvent e) {
+                                HWIDActivationBtnMouseClicked(e);
+                            }
+                        });
+                        HWIDActivationPanel.add(HWIDActivationBtn, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0,
+                            GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                            new Insets(0, 0, 0, 5), 0, 0));
+
+                        //---- label2 ----
+                        label2.setText("Permanent / Requires Internet Connection ");
+                        HWIDActivationPanel.add(label2, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0,
+                            GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                            new Insets(0, 0, 0, 0), 0, 0));
+                    }
+                    panel9.add(HWIDActivationPanel);
+
+                    //======== OhookActivationPanel ========
+                    {
+                        OhookActivationPanel.setBorder(UIManager.getBorder("ComboBox.border"));
+                        OhookActivationPanel.setLayout(new GridBagLayout());
+                        ((GridBagLayout)OhookActivationPanel.getLayout()).columnWidths = new int[] {0, 0, 0};
+                        ((GridBagLayout)OhookActivationPanel.getLayout()).rowHeights = new int[] {0, 0};
+                        ((GridBagLayout)OhookActivationPanel.getLayout()).columnWeights = new double[] {0.0, 0.0, 1.0E-4};
+                        ((GridBagLayout)OhookActivationPanel.getLayout()).rowWeights = new double[] {0.0, 1.0E-4};
+
+                        //---- OhookActivationBtn ----
+                        OhookActivationBtn.setText("Ohook");
+                        OhookActivationBtn.addMouseListener(new MouseAdapter() {
+                            @Override
+                            public void mouseClicked(MouseEvent e) {
+                                OhookActivationBtnMouseClicked(e);
+                            }
+                        });
+                        OhookActivationPanel.add(OhookActivationBtn, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0,
+                            GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                            new Insets(0, 0, 0, 5), 0, 0));
+
+                        //---- label3 ----
+                        label3.setText("Permanent / Office activation");
+                        OhookActivationPanel.add(label3, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0,
+                            GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                            new Insets(0, 0, 0, 0), 0, 0));
+                    }
+                    panel9.add(OhookActivationPanel);
+
+                    //======== KMS38ActivationPanel ========
+                    {
+                        KMS38ActivationPanel.setBorder(UIManager.getBorder("ComboBox.border"));
+                        KMS38ActivationPanel.setLayout(new GridBagLayout());
+                        ((GridBagLayout)KMS38ActivationPanel.getLayout()).columnWidths = new int[] {0, 0, 0};
+                        ((GridBagLayout)KMS38ActivationPanel.getLayout()).rowHeights = new int[] {0, 0};
+                        ((GridBagLayout)KMS38ActivationPanel.getLayout()).columnWeights = new double[] {0.0, 0.0, 1.0E-4};
+                        ((GridBagLayout)KMS38ActivationPanel.getLayout()).rowWeights = new double[] {0.0, 1.0E-4};
+
+                        //---- KMS38ActivationBtn ----
+                        KMS38ActivationBtn.setText("KMS38");
+                        KMS38ActivationBtn.addMouseListener(new MouseAdapter() {
+                            @Override
+                            public void mouseClicked(MouseEvent e) {
+                                KMS38ActivationBtnMouseClicked(e);
+                            }
+                        });
+                        KMS38ActivationPanel.add(KMS38ActivationBtn, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0,
+                            GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                            new Insets(0, 0, 0, 5), 0, 0));
+
+                        //---- label4 ----
+                        label4.setText("Till the Year 2038 ");
+                        KMS38ActivationPanel.add(label4, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0,
+                            GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                            new Insets(0, 0, 0, 0), 0, 0));
+                    }
+                    panel9.add(KMS38ActivationPanel);
+                }
+                panel3.add(panel9, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0,
+                    GridBagConstraints.CENTER, GridBagConstraints.NONE,
+                    new Insets(0, 0, 5, 0), 0, 0));
+
+                //======== panel11 ========
+                {
+                    panel11.setLayout(new GridBagLayout());
+                    ((GridBagLayout)panel11.getLayout()).columnWidths = new int[] {0, 0, 0};
+                    ((GridBagLayout)panel11.getLayout()).rowHeights = new int[] {0, 0};
+                    ((GridBagLayout)panel11.getLayout()).columnWeights = new double[] {1.0, 1.0, 1.0E-4};
+                    ((GridBagLayout)panel11.getLayout()).rowWeights = new double[] {1.0, 1.0E-4};
+
+                    //---- label1 ----
+                    label1.setText("Activation methods made by MASSGRAVE team");
+                    panel11.add(label1, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0,
+                        GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                        new Insets(0, 0, 0, 3), 0, 0));
+
+                    //---- label5 ----
+                    label5.setText("(?)");
+                    label5.setForeground(new Color(0x666666));
+                    label5.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+                    label5.addMouseListener(new MouseAdapter() {
+                        @Override
+                        public void mouseClicked(MouseEvent e) {
+                            aboutMassgraveTeamPressed(e);
+                        }
+                    });
+                    panel11.add(label5, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0,
+                        GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                        new Insets(0, 0, 0, 0), 0, 0));
+                }
+                panel3.add(panel11, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0,
+                    GridBagConstraints.CENTER, GridBagConstraints.VERTICAL,
+                    new Insets(0, 0, 0, 0), 0, 0));
+            }
+            tabbedPane1.addTab("Activation", panel3);
+
+            //======== panel10 ========
+            {
+                panel10.setLayout(new GridBagLayout());
+                ((GridBagLayout)panel10.getLayout()).columnWidths = new int[] {0, 0, 0};
+                ((GridBagLayout)panel10.getLayout()).rowHeights = new int[] {0, 0, 0, 0};
+                ((GridBagLayout)panel10.getLayout()).columnWeights = new double[] {0.0, 0.0, 1.0E-4};
+                ((GridBagLayout)panel10.getLayout()).rowWeights = new double[] {0.0, 0.0, 0.0, 1.0E-4};
+
+                //---- label6 ----
+                label6.setText("text");
+                panel10.add(label6, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0,
+                    GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                    new Insets(0, 0, 5, 5), 0, 0));
+            }
+            tabbedPane1.addTab("Settings", panel10);
+
             tabbedPane1.setSelectedIndex(1);
         }
         contentPane.add(tabbedPane1);
@@ -625,14 +950,16 @@ public class MainWindow extends JFrame implements TweaksInterface {
     }
 
     // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables  @formatter:off
-    // Generated using JFormDesigner Evaluation license - Redactov
+    // Generated using JFormDesigner Evaluation license - redact
     private JMenuBar menuBar1;
     private JButton button1;
     private JTabbedPane tabbedPane1;
     private JPanel panel1;
+    private JTextField textField1;
     private JPanel panel2;
     private JScrollPane scrollPane1;
     private JTable AppsTable;
+    private JButton button5;
     private JPanel panel4;
     private JTextArea textArea1;
     private JPanel panel7;
@@ -659,5 +986,21 @@ public class MainWindow extends JFrame implements TweaksInterface {
     private JButton button3;
     private JButton button4;
     private JButton button2;
+    private JPanel panel3;
+    private JPanel panel9;
+    private JPanel HWIDActivationPanel;
+    private JButton HWIDActivationBtn;
+    private JLabel label2;
+    private JPanel OhookActivationPanel;
+    private JButton OhookActivationBtn;
+    private JLabel label3;
+    private JPanel KMS38ActivationPanel;
+    private JButton KMS38ActivationBtn;
+    private JLabel label4;
+    private JPanel panel11;
+    private JLabel label1;
+    private JLabel label5;
+    private JPanel panel10;
+    private JLabel label6;
     // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
 }
