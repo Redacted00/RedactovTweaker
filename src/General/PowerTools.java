@@ -96,7 +96,7 @@ public class PowerTools {
     public static Map<String, App> initApps() {
 
         //https://pastebin.com/raw/kUHvgmYv
-        String appsURL = getContentFromURL("https://pastebin.com/raw/kUHvgmYv");
+        String appsURL = getContentFromURL("https://gist.githubusercontent.com/Redacted00/ec27c7f4f81ccef9b02b34378f3eb1cf/raw/ba7f85b50cdccd5d4c2aaa104b02942d4245822a/apps.json");
 
         //String jsFile = appsURL;
         System.out.println(appsURL);

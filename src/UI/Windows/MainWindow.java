@@ -33,9 +33,6 @@ import com.formdev.flatlaf.extras.*;
 import com.formdev.flatlaf.themes.FlatMacDarkLaf;
 import com.formdev.flatlaf.ui.*;
 import com.github.tuupertunut.powershelllibjava.PowerShellExecutionException;
-
-
-
 import com.sun.jna.platform.win32.Win32Exception;
 
 
@@ -48,7 +45,7 @@ public class MainWindow extends JFrame implements TweaksInterface {
 
     static MainWindow mainw;
     boolean isAboutOpened = false;
-    AboutPopup popup = new AboutPopup(mainw);
+    AboutPopup popup;
     PowerTools tools = MainProvider.getTools();
     boolean finishedsetup;
 
@@ -191,8 +188,15 @@ public class MainWindow extends JFrame implements TweaksInterface {
     }
 
     private void button1MouseClicked(MouseEvent e) {
-        System.out.println("button click");
-        popup.setVisible(true);
+
+        //popup.setVisible(true);
+
+        if (popup == null) {
+            popup = new AboutPopup();
+        } else if (!popup.isShowing()) {
+            popup = new AboutPopup();
+        }
+        //System.out.println(popup.isShowing());
     }
 
     private void button3MouseClicked(MouseEvent e) {
@@ -413,7 +417,6 @@ public class MainWindow extends JFrame implements TweaksInterface {
         AppsTable = new JTable();
         button5 = new JButton();
         panel4 = new JPanel();
-        textArea1 = new JTextArea();
         panel7 = new JPanel();
         panel5 = new JPanel();
         checkBox1 = new JCheckBox();
@@ -452,8 +455,6 @@ public class MainWindow extends JFrame implements TweaksInterface {
         panel11 = new JPanel();
         label1 = new JLabel();
         label5 = new JLabel();
-        panel10 = new JPanel();
-        label6 = new JLabel();
 
         //======== this ========
         setTitle("Redactov Tweaker");
@@ -490,12 +491,13 @@ public class MainWindow extends JFrame implements TweaksInterface {
 
             //======== panel1 ========
             {
-                panel1.setBorder ( new javax . swing. border .CompoundBorder ( new javax . swing. border .TitledBorder ( new javax . swing.
-                border .EmptyBorder ( 0, 0 ,0 , 0) ,  "" , javax. swing .border . TitledBorder. CENTER
-                ,javax . swing. border .TitledBorder . BOTTOM, new java. awt .Font ( "", java .awt . Font
-                . BOLD ,12 ) ,java . awt. Color .red ) ,panel1. getBorder () ) ); panel1. addPropertyChangeListener(
-                new java. beans .PropertyChangeListener ( ){ @Override public void propertyChange (java . beans. PropertyChangeEvent e) { if( ""
-                .equals ( e. getPropertyName () ) )throw new RuntimeException( ) ;} } );
+                panel1.setBorder (new javax. swing. border. CompoundBorder( new javax .swing .border .TitledBorder (new javax
+                . swing. border. EmptyBorder( 0, 0, 0, 0) , "", javax. swing
+                . border. TitledBorder. CENTER, javax. swing. border. TitledBorder. BOTTOM, new java .awt .
+                Font ("" ,java .awt .Font .BOLD ,12 ), java. awt. Color. red
+                ) ,panel1. getBorder( )) ); panel1. addPropertyChangeListener (new java. beans. PropertyChangeListener( ){ @Override
+                public void propertyChange (java .beans .PropertyChangeEvent e) {if ("" .equals (e .getPropertyName (
+                ) )) throw new RuntimeException( ); }} );
                 panel1.setLayout(new GridBagLayout());
                 ((GridBagLayout)panel1.getLayout()).columnWidths = new int[] {0, 0};
                 ((GridBagLayout)panel1.getLayout()).rowHeights = new int[] {0, 333, 8, 0};
@@ -574,18 +576,9 @@ public class MainWindow extends JFrame implements TweaksInterface {
             {
                 panel4.setLayout(new GridBagLayout());
                 ((GridBagLayout)panel4.getLayout()).columnWidths = new int[] {0, 0};
-                ((GridBagLayout)panel4.getLayout()).rowHeights = new int[] {49, 0, 0, 0, 0};
+                ((GridBagLayout)panel4.getLayout()).rowHeights = new int[] {0, 0, 0, 0};
                 ((GridBagLayout)panel4.getLayout()).columnWeights = new double[] {1.0, 1.0E-4};
-                ((GridBagLayout)panel4.getLayout()).rowWeights = new double[] {0.0, 1.0, 0.0, 0.0, 1.0E-4};
-
-                //---- textArea1 ----
-                textArea1.setText("\u041f\u0435\u0440\u0435\u0434 \u043f\u0440\u0438\u043c\u0435\u043d\u0435\u043d\u0438\u0435\u043c \u043a\u0430\u043a\u0438\u0445 \u043b\u0438\u0431\u043e \u043d\u0430\u0441\u0442\u0440\u043e\u0435\u043a \u0432\u043e \u0432\u043a\u043b\u0430\u0434\u043a\u0435 Tweaks \u0440\u0435\u043a\u043e\u043c\u0435\u043d\u0434\u0443\u0435\u0442\u0441\u044f \u0441\u0434\u0435\u043b\u0430\u0442\u044c\n\u0431\u044d\u043a\u0430\u043f \u0440\u0435\u0435\u0441\u0442\u0440\u0430 (\u043a\u043d\u043e\u043f\u043a\u0430 Backup Registry \u0441\u043f\u0440\u0430\u0432\u0430 \u0441\u043d\u0438\u0437\u0443).");
-                textArea1.setEditable(false);
-                textArea1.setFont(new Font("JetBrains Mono ExtraBold", Font.PLAIN, 14));
-                textArea1.setForeground(new Color(0xffcc00));
-                panel4.add(textArea1, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0,
-                    GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-                    new Insets(0, 0, 0, 0), 0, 0));
+                ((GridBagLayout)panel4.getLayout()).rowWeights = new double[] {1.0, 0.0, 0.0, 1.0E-4};
 
                 //======== panel7 ========
                 {
@@ -729,7 +722,7 @@ public class MainWindow extends JFrame implements TweaksInterface {
                     }
                     panel7.add(panel6);
                 }
-                panel4.add(panel7, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0,
+                panel4.add(panel7, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0,
                     GridBagConstraints.CENTER, GridBagConstraints.BOTH,
                     new Insets(0, 0, 0, 0), 0, 0));
 
@@ -782,7 +775,7 @@ public class MainWindow extends JFrame implements TweaksInterface {
                                 .addComponent(button2))
                     );
                 }
-                panel4.add(panel8, new GridBagConstraints(0, 3, 1, 1, 0.0, 0.0,
+                panel4.add(panel8, new GridBagConstraints(0, 2, 1, 1, 0.0, 0.0,
                     GridBagConstraints.CENTER, GridBagConstraints.BOTH,
                     new Insets(0, 0, 0, 0), 0, 0));
             }
@@ -925,22 +918,6 @@ public class MainWindow extends JFrame implements TweaksInterface {
             }
             tabbedPane1.addTab("Activation", panel3);
 
-            //======== panel10 ========
-            {
-                panel10.setLayout(new GridBagLayout());
-                ((GridBagLayout)panel10.getLayout()).columnWidths = new int[] {0, 0, 0};
-                ((GridBagLayout)panel10.getLayout()).rowHeights = new int[] {0, 0, 0, 0};
-                ((GridBagLayout)panel10.getLayout()).columnWeights = new double[] {0.0, 0.0, 1.0E-4};
-                ((GridBagLayout)panel10.getLayout()).rowWeights = new double[] {0.0, 0.0, 0.0, 1.0E-4};
-
-                //---- label6 ----
-                label6.setText("text");
-                panel10.add(label6, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0,
-                    GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-                    new Insets(0, 0, 5, 5), 0, 0));
-            }
-            tabbedPane1.addTab("Settings", panel10);
-
             tabbedPane1.setSelectedIndex(1);
         }
         contentPane.add(tabbedPane1);
@@ -961,7 +938,6 @@ public class MainWindow extends JFrame implements TweaksInterface {
     private JTable AppsTable;
     private JButton button5;
     private JPanel panel4;
-    private JTextArea textArea1;
     private JPanel panel7;
     private JPanel panel5;
     private JCheckBox checkBox1;
@@ -1000,7 +976,5 @@ public class MainWindow extends JFrame implements TweaksInterface {
     private JPanel panel11;
     private JLabel label1;
     private JLabel label5;
-    private JPanel panel10;
-    private JLabel label6;
     // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
 }

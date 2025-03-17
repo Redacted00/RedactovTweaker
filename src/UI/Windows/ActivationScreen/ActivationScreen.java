@@ -31,6 +31,7 @@ public class ActivationScreen extends JFrame {
         setSize(400,345);
         setResizable(false);
         setVisible(true);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
         //initComponents();
     }

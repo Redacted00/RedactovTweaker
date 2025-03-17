@@ -72,18 +72,11 @@ new FormModel {
 				} )
 				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.GridBagLayout ) {
 					"$columnSpecs": "0:1.0"
-					"$rowSpecs": "49, 0:1.0, 0, 0"
+					"$rowSpecs": "0:1.0, 0, 0"
 					"$alignTop": true
 					"$alignLeft": true
 				} ) {
 					name: "panel4"
-					add( new FormComponent( "javax.swing.JTextArea" ) {
-						name: "textArea1"
-						"text": "Перед применением каких либо настроек во вкладке Tweaks рекомендуется сделать\nбэкап реестра (кнопка Backup Registry справа снизу)."
-						"editable": false
-						"font": new java.awt.Font( "JetBrains Mono ExtraBold", 0, 14 )
-						"foreground": new java.awt.Color( 255, 204, 0, 255 )
-					}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) )
 					add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.GridLayout ) ) {
 						name: "panel7"
 						add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.GridBagLayout ) {
@@ -226,9 +219,7 @@ new FormModel {
 								"gridy": 6
 							} )
 						} )
-					}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
-						"gridy": 1
-					} )
+					}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) )
 					add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
 						"$horizontalGroup": "par l {seq {comp button3:::p::p, space :0:0:p, comp button4:::p::p, space ::422:x, comp button2:::p::p}}"
 						"$verticalGroup": "par l {comp button3:::p::p, par b {comp button4::b:p::p, comp button2::b:p::p}}"
@@ -250,7 +241,7 @@ new FormModel {
 							addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "button2MouseClicked", true ) )
 						} )
 					}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
-						"gridy": 3
+						"gridy": 2
 					} )
 				}, new FormLayoutConstraints( null ) {
 					"title": "Tweaks"
@@ -365,22 +356,6 @@ new FormModel {
 					} )
 				}, new FormLayoutConstraints( null ) {
 					"title": "Activation"
-				} )
-				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.GridBagLayout ) {
-					"$columnSpecs": "0, 0"
-					"$rowSpecs": "0, 0, 0"
-					"$hGap": 5
-					"$vGap": 5
-					"$alignLeft": true
-					"$alignTop": true
-				} ) {
-					name: "panel10"
-					add( new FormComponent( "javax.swing.JLabel" ) {
-						name: "label6"
-						"text": "text"
-					}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) )
-				}, new FormLayoutConstraints( null ) {
-					"title": "Settings"
 				} )
 			} )
 			menuBar: new FormContainer( "javax.swing.JMenuBar", new FormLayoutManager( class javax.swing.JMenuBar ) ) {

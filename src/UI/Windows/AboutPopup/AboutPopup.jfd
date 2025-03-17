@@ -7,22 +7,60 @@ new FormModel {
 			name: "this"
 			"title": "About"
 			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.GridBagLayout ) {
-				"$columnSpecs": "0:1.0"
-				"$rowSpecs": "0"
+				"$columnSpecs": "left:128, 0:1.0"
+				"$rowSpecs": "0:1.0"
 				"$hGap": 5
-				"$vGap": 5
+				"$vGap": 1
 				"$alignLeft": true
 				"$alignTop": true
 			} ) {
 				name: "panel1"
 				add( new FormComponent( "javax.swing.JLabel" ) {
 					name: "label1"
-					"text": "Redacted's Tweaked 0.2A"
-				}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) )
+					"icon": new com.jformdesigner.model.SwingIcon( 0, "/resources/rticonsmall.png" )
+				}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
+					"insets": new java.awt.Insets( 0, 5, 0, 0 )
+				} )
+				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.GridBagLayout ) {
+					"$columnSpecs": "0"
+					"$rowSpecs": "0, 0, 0:1.0"
+					"$hGap": 5
+					"$vGap": 1
+					"$alignLeft": true
+					"$alignTop": true
+				} ) {
+					name: "panel2"
+					add( new FormComponent( "javax.swing.JLabel" ) {
+						name: "label2"
+						"text": "Redactov Tweaker 0.3A"
+						"font": new com.jformdesigner.model.SwingDerivedFont( null, 1, 10, false )
+					}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) )
+					add( new FormComponent( "javax.swing.JLabel" ) {
+						name: "label3"
+						"text": " Made by Pavel Redactov"
+						"font": new com.jformdesigner.model.SwingDerivedFont( null, 0, 3, false )
+					}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
+						"gridy": 1
+						"insets": new java.awt.Insets( 0, 5, 0, 0 )
+					} )
+					add( new FormComponent( "javax.swing.JTextPane" ) {
+						name: "textPane1"
+						"background": new java.awt.Color( 30, 30, 30, 255 )
+						"text": "A program that allows you to customize your system, install necessary programs, configure settings that are inaccessible to the average user, activate Windows and Office."
+						"editable": false
+						"autoscrolls": false
+						"focusable": false
+					}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
+						"gridy": 2
+						"insets": new java.awt.Insets( 0, 5, 0, 0 )
+					} )
+				}, new FormLayoutConstraints( class com.jformdesigner.runtime.GridBagConstraintsEx ) {
+					"gridx": 1
+				} )
 			} )
 		}, new FormLayoutConstraints( null ) {
-			"location": new java.awt.Point( 0, 0 )
-			"size": new java.awt.Dimension( 405, 185 )
+			"location": new java.awt.Point( 0, 15 )
+			"size": new java.awt.Dimension( 400, 180 )
 		} )
 	}
 }
